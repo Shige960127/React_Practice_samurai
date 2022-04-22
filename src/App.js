@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+// import "./style.css"
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const InputCheckBox = () => {
+const [checkedValues, setCheckedValues] = useState([]);
+const handleChange = (e) => {
+  if (checkedValues.includes(e.target.value)) {
+    setCheckedValues(
+      checkedValues.filter((checkedValues) =>
+        checkedValues !== e.target.value)
+    )
+  } else {
+    setCheckedValues([...checkedValues, e.target.value]);
+  }
+};
 
-export default App;
+return (
+  <div className="App">
+    <p>
+      <b>{checkedValues.join("、")}</b>
+    </p>
+    <label>
+      <input type="checkbox" value="マウス"
+        onChange={handleChange}
+        checked={checkedValues.includes("マウス")} />
+    </label>
+    <label>
+      <input type="checkbox" value="モニター"
+        onChange={handleChange}
+        checked={checkedValues.includes("モニター")} />
+    </label>
+    <label>
+      <input type="checkbox" value="キーボード"
+        onChange={handleChange}
+        checked={checkedValues.includes("キーボード")} />
+    </label>
+  </div>
+);
+};
+
+export default function App() {
+  return <inputCheckBox />
+} 

@@ -1,24 +1,53 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
+import { useTodo } from "./hooks/useTodo";
+import { TodoTitle } from "./componets/TodoTitle";
+import { TodoAdd } from "./componets/TodoAdd";
+import { TodoList } from "./componets/TodoList";
 
+function App() {
+    const {
+        todoList,
+        addTodoListItem,
+        toggleTodoListItemStatus,
+        deleteTodoListItem
+    } = useTodo();
 
-const LogoutButton = (props) => (
-  <button onClick={props.toggleIsLoggedIn}>Logout</button>
-)
-const LoginButton = (props) => (
-  <button onClick={props.toggleIsLoggedIn}>Login</button>
-)
+    const inputEl = useRef(null);
 
-const LoginControl = () => {
-  const [loginState, setLoginState] = useState(false);
-  const toggleIsLoggedIn = () => {
-    setLoginState(!loginState);
-  }
-  if (loginState) {
-    return < LogoutButton toggleIsLoggedIn={toggleIsLoggedIn} />
-  }
-  return <LoginButton toggleIsLoggedIn={toggleIsLoggedIn} />
-};
+    const handleAddTodoListItem = () => {
+        if (inputEl.current.value === "") return;
+        addTodoListItem(inputEl.current.value);
+        inputEl.current.value = "";
+    };
+    console.log("TODOリスト:", todoList);
 
-export default function App() {
-  return <LoginControl />
+    const inCompletedList = todoList.filter((todo) => {
+        return !todo.done;
+    });
+
+    const completedList = todoList.filter((todo) => {
+        return todo.done
+    });
+
+    return (
+        <>
+            <TodoTitle title="TODO進捗管理" as="h1" />
+            <TodoAdd
+                buttonText = "+ TODOを追加"
+                inputEl={inputEl} handleAddTodoListItem={handleAddTodoListItem}
+            />
+            <TodoList todoList={inCompletedList}
+                toggleTodoListItemStatus={toggleTodoListItemStatus}
+                deleteTodoListItem={deleteTodoListItem}
+                title="未完了TODOリスト" as="h2"
+            />
+            <TodoList todoList={completedList}
+                toggleTodoListItemStatus={toggleTodoListItemStatus}
+                deleteTodoListItem={deleteTodoListItem}
+                title="完了TODOリスト" as="h2"
+            />
+        </>
+    );
 }
+
+export default App;
